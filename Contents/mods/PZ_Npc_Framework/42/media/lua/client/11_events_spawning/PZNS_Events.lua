@@ -4,7 +4,9 @@ local PZNS_UtilsDataNPCs = require("02_mod_utils/PZNS_UtilsDataNPCs");
 local PZNS_UtilsDataZones = require("02_mod_utils/PZNS_UtilsDataZones");
 local PZNS_UtilsNPCs = require("02_mod_utils/PZNS_UtilsNPCs");
 local PZNS_WorldUtils = require("02_mod_utils/PZNS_WorldUtils");
-local PZNS_GeneralAI = require("07_npc_ai/PZNS_GeneralAI")
+local PZNS_GeneralAI = require("07_npc_ai/PZNS_GeneralAI");
+local PZNS_NPCNeedsMain = require("07_npc_ai/PZNS_NPCNeedsMain");
+
 -- Cows: Sandbox Options if needed
 Events.OnInitGlobalModData.Add(PZNS_GetSandboxOptions);
 --
@@ -33,6 +35,8 @@ local function PZNS_Events()
     if (IsNPCsNeedsActive == false) then
         Events.EveryHours.Add(PZNS_UtilsNPCs.PZNS_ClearAllNPCsAllNeedsLevel);
         Events.EveryTenMinutes.Add(PZNS_UtilsNPCs.PZNS_ClearNPCAllNeedsLevelOnPlayerUpdate);
+	else
+		Events.OnRenderTick.Add(PZNS_NPCNeedsMain.PZNS_UpdateAllNeeds);
     end
     -- Cows: May need to change this to OnPlayerUpdate to address https://github.com/shadowhunter100/PZNS/issues/34...
     -- Cows: Maybe not, since the NPCs will be unloaded much more aggressively/sooner at 45 squares, will confirm after more testing.

@@ -83,7 +83,7 @@
 
     "IGUI_PZNS_Speech_Preset_CannotAttack_01": "No Permission to attack",
 
-    "IGUI_PZNS_Speech_Preset_NoWorkZone_Undertaker": "No Workzone for Undertaker..."
+    "IGUI_PZNS_Speech_Preset_NoWorkZone_Undertaker": "No Workzone for Undertaker...",
 	
 	
 	
@@ -95,5 +95,5 @@
     "IGUI_KarasZone_ConfirmMsg": "Confirm selection of this zone?",
     "IGUI_KarasZone_Width": "Width: %1",
     "IGUI_KarasZone_Height": "Height: %1",
-    "IGUI_KarasZone_Total": "Total Tiles: %1",
+    "IGUI_KarasZone_Total": "Total Tiles: %1"
 }
