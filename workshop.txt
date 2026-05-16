@@ -1,0 +1,62 @@
+version=1
+id=3001908830
+title=PZNS NPC Framework
+description=[h1]PZNS Framework (B41)[/h1]
+description=
+description=A new Lua based framework for managing, spawning, and directing NPCs in Project Zomboid
+description=
+description=This is an effort to standardize NPC management and spawning while offering the flexibility to all modders the ability to create and modify NPCs to their content without worry about all the complicated issues such as AI behaviors, data management, and decompiling PZ source code.
+description=
+description=[h1]THIS IS A PREVIEW WITH B41[/h1]
+description=- [i][b]There are no Multiplayer Support planned[/b][/i]
+description=- Basically what I have learned to manage PZ game data.
+description=- No promises on anything; if you want something, please contribute to the framework github.
+description=- Join the Modding Community Discord to follow developments
+description=- With the debugmode active (via sandbox-options), you can spawn up to 2 NPCs using the contextmenu [b]PZNS Debug World[/b]
+description=
+description=[h1]The outfits are NOT mine[/h1]
+description=They are both by Satispie, I only have the NPCs equipping them to showcase the possibilities.
+description=  - Chris - https://steamcommunity.com/sharedfiles/filedetails/?id=2903317798
+description=  - Jill - https://steamcommunity.com/sharedfiles/filedetails/?id=2903870282
+description=  - This is/was intended for testing NPC actions. In a a future update, they will be removed or toggled on/off as part of debugging. [u](Thanks to Tchernobill for reminding me)[/u].
+description=
+description=[h1]There are no Multiplayer Support planned[/h1]
+description=- Technical reasons, in short:
+description=[list]
+description=[*]TIS devs already have NPCs on their roadmap, this is a mod to get NPCs sooner for personal enjoyment.
+description=[*]I am not doubling/tripling my own workload to write server-side code and testing all that stuff.
+description=[*]If anyone else wants to try - go ahead, I am not stopping anyone from trying, the project's code is all there on github.
+description=[/list]
+description=Cows: [i][b]I will be blocking anyone requesting multiplayer support from me personally.[/b][/i]
+description=
+description=[h1]This mod is INCOMPATIBLE with SS/SSC[/h1]
+description=- In theory, it [i]should[/i] be mostly compatible, but...
+description=- For stability reasons (mostly OnRenderTicks cycles) and how poorly SS/SSC manages game data, I am declaring PZNS as incompatible.
+description=- If you want to break your game with SS/SSC, I am not responsible for your choice.
+description=
+description=[h1]For Other Modders[/h1]
+description=All functions in PZNS will have working examples for modders to follow so that they create and spawn their own NPC creations in-game.
+description=
+description=[i]If you can read, you can create a standalone NPC with less than 200 lines of code using this framework.[/i]
+description=
+description=Workshop pages for examples
+description=https://steamcommunity.com/sharedfiles/filedetails/?id=3001910188
+description=https://steamcommunity.com/sharedfiles/filedetails/?id=3001909546
+description=
+description=For Details
+description=Main Project GitHub: https://github.com/shadowhunter100/PZNS
+description=Example Group Github: https://github.com/shadowhunter100/PZNS_RosewoodPolice
+description=Example Standalone Github: https://github.com/shadowhunter100/PZNS_AgentWong
+description=
+description=Now go make your own NPCs and [i]please[/i] contribute to the main project.
+description=
+description=[url=https://discord.gg/SReMnbV4V7][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/PZmodCommBanner1.png[/img][/url]
+description=
+description=[h1]Please report your issues at the the github Issues page.[/h1]
+description=https://github.com/shadowhunter100/PZNS/issues
+description=
+description=[h1]ko-fi[/h1]
+description=[i]Support me (and feed my cat) on ko-fi![/i]
+description=https://ko-fi.com/cowswg
+tags=Build 41;Framework;Misc
+visibility=public

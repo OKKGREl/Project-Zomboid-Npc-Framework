@@ -1,0 +1,325 @@
+require "ISUI/ISCollapsableWindowJoypad"
+
+PZNS_ISZonePanel = ISCollapsableWindowJoypad:derive("PZNS_ISZonePanel");
+
+local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.NewSmall)
+local FONT_HGT_MEDIUM = getTextManager():getFontHeight(UIFont.NewMedium)
+local UI_BORDER_SPACING = 10
+local BUTTON_HGT = FONT_HGT_SMALL + 6
+
+function PZNS_ISZonePanel:initialise()
+    ISCollapsableWindowJoypad.initialise(self);
+    local btnWid = 150
+
+    local width = UI_BORDER_SPACING*2 + 2 + math.max(
+            getTextManager():MeasureStringX(UIFont.Small, getText("IGUI_DesignationZone_WanderInfo")),
+            getTextManager():MeasureStringX(UIFont.Small, getText("IGUI_DesignationZone_WanderInfo2"))
+    )
+    self:setWidth(math.max(width, self.width))
+
+    self.zoneList = ISScrollingListBox:new(UI_BORDER_SPACING+1, self:titleBarHeight() + UI_BORDER_SPACING, self.width - (UI_BORDER_SPACING+1)*2, BUTTON_HGT * 16);
+    self.zoneList:initialise();
+    self.zoneList:instantiate();
+    self.zoneList.itemheight = BUTTON_HGT;
+    self.zoneList.selected = 0;
+    self.zoneList.joypadParent = self;
+    self.zoneList.font = UIFont.NewSmall;
+    self.zoneList.doDrawItem = self.drawList;
+    self.zoneList.drawBorder = true;
+    self:addChild(self.zoneList);
+
+    self.addZone = ISButton:new(self.zoneList.x, self.zoneList.y + self.zoneList.height + UI_BORDER_SPACING, btnWid, BUTTON_HGT, getText("IGUI_PvpZone_AddZone"), self, PZNS_ISZonePanel.onClick);
+    self.addZone.internal = "ADDZONE";
+    self.addZone:initialise();
+    self.addZone:instantiate();
+    self.addZone.borderColor = self.buttonBorderColor;
+    self:addChild(self.addZone);
+
+    self.removeZone = ISButton:new(self.width - 1 - btnWid - UI_BORDER_SPACING, self.addZone.y, btnWid, BUTTON_HGT, getText("ContextMenu_Remove"), self, PZNS_ISZonePanel.onClick);
+    self.removeZone.internal = "REMOVEZONE";
+    self.removeZone:initialise();
+    self.removeZone:instantiate();
+    self.removeZone.borderColor = self.buttonBorderColor;
+    self:addChild(self.removeZone);
+    self.removeZone.enable = false;
+
+    self.renameZone = ISButton:new(self.removeZone.x - btnWid - UI_BORDER_SPACING, self.addZone.y, btnWid, BUTTON_HGT, getText("ContextMenu_RenameBag"), self, PZNS_ISZonePanel.onClick);
+    self.renameZone.internal = "RENAMEZONE";
+    self.renameZone:initialise();
+    self.renameZone:instantiate();
+    self.renameZone.borderColor = self.buttonBorderColor;
+    self:addChild(self.renameZone);
+    self.renameZone.enable = false;
+
+    self.closeButton = ISButton:new(self.removeZone.x, self.addZone:getBottom() + BUTTON_HGT*2, btnWid, BUTTON_HGT, getText("IGUI_CraftUI_Close"), self, PZNS_ISZonePanel.onClick);
+    self.closeButton.internal = "OK";
+    self.closeButton:initialise();
+    self.closeButton:instantiate();
+    self.closeButton:enableCancelColor();
+    self:addChild(self.closeButton);
+
+    self:setHeight(self.closeButton:getBottom() + UI_BORDER_SPACING + 1)
+
+    if self.listTakesFocus then
+        self.joypadIndexY = 1
+        self.joypadIndex = 1
+        self.joypadButtonsY = {}
+        self.joypadButtons = {}
+        self:insertNewLineOfButtons(self.zoneList)
+        self:insertNewLineOfButtons(self.addZone, self.renameZone, self.removeZone)
+    end
+
+    self:populateList();
+
+end
+
+function PZNS_ISZonePanel:close()
+    self:setVisible(false);
+    self:removeFromUIManager();
+    self.player:setSeeDesignationZone(false);
+    if isJoypadFocusOnElementOrDescendant(self.playerNum, self) then
+        setJoypadFocus(self.playerNum, nil)
+    end
+end
+
+function PZNS_ISZonePanel:populateList()
+    self.zoneList:clear();
+    local zoneDisplayedAlready = ArrayList.new(); -- a zone could have multiple connected zone, but we display only the first connected, no need for the others
+    local allZones = DesignationZone.getAllZones();
+    for i=0,allZones:size()-1 do
+        local zone = allZones:get(i);
+        if not zoneDisplayedAlready:contains(zone) then
+            local connectedZones = DesignationZoneAnimal.getAllDZones(nil, zone, nil);
+            -- don't show zone that's not streamed
+            if zone:isStillStreamed() then
+                local newZone = {};
+                newZone.title = zone:getName();
+                newZone.size = zone:getW() * zone:getH();
+                newZone.zone = zone;
+                self.zoneList:addItem(newZone.title, newZone);
+            end
+
+            for j=0,connectedZones:size()-1 do
+                zoneDisplayedAlready:add(connectedZones:get(j));
+            end
+        end
+    end
+end
+
+function PZNS_ISZonePanel:drawList(y, item, alt)
+    local a = 0.9;
+    if not self.currentWidth then self.currentWidth = 0; end
+    self:drawRectBorder(0, (y), self:getWidth(), self.itemheight - 1, a, self.borderColor.r, self.borderColor.g, self.borderColor.b);
+
+    if self.selected == item.index then
+        self:drawRect(0, (y), self:getWidth(), self.itemheight - 1, 0.3, 0.7, 0.35, 0.15);
+    end
+
+    self:drawText(item.item.title, 10, y + 2, 1, 1, 1, a, self.font);
+    local newWidth = getTextManager():MeasureStringX(self.font, item.item.title)
+    if newWidth > self.currentWidth then
+        self.currentWidth = newWidth;
+    end
+
+    self:drawText("Size: " .. item.item.size, self.currentWidth + 20, y + 2, 1, 1, 1, a, self.font);
+
+    return y + self.itemheight;
+end
+
+function PZNS_ISZonePanel:prerender()
+    ISCollapsableWindowJoypad.prerender(self)
+
+    self:setInfo(getText("IGUI_DesignationZone_Info"));
+end
+
+function PZNS_ISZonePanel:updateButtons()
+end
+
+function PZNS_ISZonePanel:render()
+    ISCollapsableWindowJoypad.render(self);
+
+    self:updateButtons();
+
+    self.removeZone.enable = false;
+    self.renameZone.enable = false;
+    if self.zoneList.selected > 0 then
+        self.removeZone.enable = true;
+        self.renameZone.enable = true;
+        -- reset the list of zones to highlight when clicking another zone
+        if self.zoneList.items[self.zoneList.selected].item.zone ~= self.selectedZone then
+            self.player:resetSelectedZonesForHighlight();
+        end
+        self.selectedZone = self.zoneList.items[self.zoneList.selected].item.zone;
+    else
+        self.selectedZone = nil;
+        self.player:resetSelectedZonesForHighlight();
+    end
+
+    if not self.zoneList.joypadFocused and self.joypadIndexY == 1 then
+		local x,y,w,h = self.zoneList.x, self.zoneList.y, self.zoneList.width, self.zoneList.height
+		self:drawRectBorderStatic(x, y, w, h, 1.0, 1.0, 1.0, 1.0)
+		self:drawRectBorderStatic(x+1, y+1, w-2, h-2, 1.0, 1.0, 1.0, 1.0)
+    end
+
+    if self.selectedZone then
+        local connectedZones = DesignationZoneAnimal.getAllDZones(nil, self.selectedZone, nil);
+        self.player:setSeeDesignationZone(true);
+        for i=0, connectedZones:size()-1 do
+            self.player:addSelectedZoneForHighlight(connectedZones:get(i):getId());
+        end
+    end
+
+    local BHC = getCore():getBadHighlitedColor()
+    self:drawText(getText("IGUI_DesignationZone_WanderInfo"), self.addZone.x, self.addZone.y + BUTTON_HGT + 3, BHC:getR(), BHC:getG(), BHC:getB(), 1, self.font);
+    self:drawText(getText("IGUI_DesignationZone_WanderInfo2"), self.addZone.x, self.addZone.y + BUTTON_HGT*2 + 3, BHC:getR(), BHC:getG(), BHC:getB(), 1, self.font);
+end
+
+function PZNS_ISZonePanel:onClick(button)
+    if button.internal == "OK" then
+        self:close();
+    end
+    if button.internal == "REMOVEZONE" then
+        local modal = ISModalDialog:new(0,0, 350, 150, getText("IGUI_Designation_RemoveConfirm", self.selectedZone:getName()), true, nil, PZNS_ISZonePanel.onRemoveZone);
+        modal:initialise()
+        modal:addToUIManager()
+        modal.ui = self;
+        modal.selectedZone = self.selectedZone;
+        modal.moveWithMouse = true;
+        if getJoypadData(self.playerNum) then
+            modal:centerOnScreen(self.playerNum)
+            modal.prevFocus = self
+            setJoypadFocus(self.playerNum, modal)
+        end
+    end
+    if button.internal == "RENAMEZONE" then
+        local modal = ISTextBox:new(0, 0, 280, 180, getText("ContextMenu_RenameBag"), self.selectedZone:getName(), self, PZNS_ISZonePanel.onRenameZoneClick);
+        modal:initialise();
+        modal:addToUIManager();
+        modal.maxChars = 30;
+        if getJoypadData(self.playerNum) then
+            modal:centerOnScreen(self.playerNum)
+            modal.prevFocus = self
+            setJoypadFocus(self.playerNum, modal)
+        end
+    end
+    if button.internal == "ADDZONE" then
+        local ui = PZNS_ISAddZoneUI:new(getPlayerScreenLeft(self.playerNum)+10, getPlayerScreenTop(self.playerNum)+10, 320, FONT_HGT_MEDIUM*8, self.player);
+        ui:initialise()
+        ui:addToUIManager()
+        ui.parentUI = self;
+        self:setVisible(false);
+        if getJoypadData(self.playerNum) then
+            setJoypadFocus(self.playerNum, ui)
+        end
+    end
+end
+
+function PZNS_ISZonePanel:onRenameZoneClick(button, animal)
+    if button.internal == "OK" then
+        if button.parent.entry:getText() and button.parent.entry:getText() ~= "" then
+            self.selectedZone:setName(button.parent.entry:getText());
+            self:populateList();
+        end
+    end
+end
+
+function PZNS_ISZonePanel:onRemoveZone(button)
+    if button.internal == "YES" then
+        DesignationZone.removeZone(button.parent.selectedZone:getName(), button.parent.selectedZone:getType());
+
+        -- flag for hotsave, no need to flag all squares as DesignationZoneAnimal is not actually on chunk - spurcival
+        getSquare(button.parent.selectedZone:getX(), button.parent.selectedZone:getY(), button.parent.selectedZone:getZ()):flagForHotSave();
+
+        button.parent.ui:populateList();
+    end
+end
+
+function PZNS_ISZonePanel:onGainJoypadFocus(joypadData)
+    ISCollapsableWindowJoypad.onGainJoypadFocus(self, joypadData)
+    if self.listTakesFocus then
+        if joypadData.switchingFocusFrom == self.zoneList then
+            self:setISButtonForB(self.closeButton)
+        else
+            self.joypadIndexY = 1
+            self.joypadIndex = 1
+            self.zoneList:setJoypadFocused(true, joypadData)
+            setJoypadFocus(self.playerNum, self.zoneList)
+        end
+    else
+        self:setISButtonForA(self.closeButton)
+        self:setISButtonForB(self.removeZone)
+        self:setISButtonForX(self.renameZone)
+        self:setISButtonForY(self.addZone)
+    end
+end
+
+function PZNS_ISZonePanel:onLoseJoypadFocus(joypadData)
+    ISCollapsableWindowJoypad.onLoseJoypadFocus(self, joypadData)
+    self:clearISButtons()
+    self:clearJoypadFocus(joypadData)
+end
+
+function PZNS_ISZonePanel:onJoypadDirUp(joypadData)
+    if not self.listTakesFocus then
+        self.zoneList:onJoypadDirUp(joypadData)
+        return
+    end
+    ISCollapsableWindowJoypad.onJoypadDirUp(self, joypadData)
+end
+
+function PZNS_ISZonePanel:onJoypadDirDown(joypadData)
+    if not self.listTakesFocus then
+        self.zoneList:onJoypadDirDown(joypadData)
+        return
+    end
+    ISCollapsableWindowJoypad.onJoypadDirDown(self, joypadData)
+end
+
+PZNS_ISZonePanel.toggleZoneUI = function(playerNum)
+    local ui = getPlayerZoneUI(playerNum)
+    if ui then
+        if ui:getIsVisible() then
+            ui:setVisible(false)
+            ui:removeFromUIManager() -- avoid update() while hidden
+            ui.player:setSeeDesignationZone(false)
+        else
+            ui:setVisible(true)
+            ui:centerOnScreen(playerNum)
+            ui:addToUIManager()
+            ui:populateList();
+            if getJoypadData(playerNum) then
+                setJoypadFocus(playerNum, ui)
+            end
+        end
+    end
+end
+
+function PZNS_ISZonePanel:new(x, y, width, height, player)
+    x = getCore():getScreenWidth() / 2 - (width / 2);
+    y = getCore():getScreenHeight() / 2 - (height / 2);
+    local o = ISCollapsableWindowJoypad.new(self, x, y, width, height);
+    o.borderColor = {r=0.4, g=0.4, b=0.4, a=1};
+    o.backgroundColor = {r=0, g=0, b=0, a=0.8};
+    o.width = width;
+    o.playerNum = player:getPlayerNum();
+    o.height = height;
+    o.player = player;
+    o:setResizable(false);
+    o.moveWithMouse = true;
+    PZNS_ISZonePanel.instance = o;
+    o.player:setSeeDesignationZone(true)
+    o.buttonBorderColor = {r=0.7, g=0.7, b=0.7, a=0.5};
+    o.listTakesFocus = false
+    o:setTitle(getText("IGUI_DesignationZone_Title"));
+    return o;
+end
+
+function PZNS_ISZonePanel.OnDesignationZoneUpdatedNetwork()
+    if PZNS_ISZonePanel.instance and PZNS_ISZonePanel.instance:getIsVisible() then
+        PZNS_ISZonePanel.instance:populateList();
+    end
+end
+
+LuaEventManager.AddEvent("OnDesignationZoneUpdatedNetwork")
+Events.OnDesignationZoneUpdatedNetwork.Add(PZNS_ISZonePanel.OnDesignationZoneUpdatedNetwork)
+

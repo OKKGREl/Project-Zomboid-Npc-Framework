@@ -1,0 +1,39 @@
+Sandbox_EN = {
+	Sandbox_PZNS_Framework = "PZNS Framework",
+	
+	Sandbox_PZNS_Framework_IsDebugModeActive = "Activate Debug Mode",
+	Sandbox_PZNS_Framework_IsDebugModeActive_tooltip = "Check to activate, uncheck to deactivate",
+
+	Sandbox_PZNS_Framework_IsInfiniteAmmoActive = "NPC has Infinite Ammo?",
+	Sandbox_PZNS_Framework_IsInfiniteAmmoActive_tooltip = "Check to activate, uncheck to deactivate - NPCs will have keep shooting without needing ammo in inventory if activated",
+
+	Sandbox_PZNS_Framework_HideNpcNameTags = "Hide NPC Names",
+	Sandbox_PZNS_Framework_HideNpcNameTags_tooltip = "Check to activate, uncheck to deactivate - NPCs names wont be visible if activated",
+
+	Sandbox_PZNS_Framework_IsNPCsNeedsActive = "(WIP)NPC has needs",
+	Sandbox_PZNS_Framework_IsNPCsNeedsActive_tooltip = "(WIP)Check to activate, uncheck to deactivate - NPCs will need food and water if activated",
+
+	Sandbox_PZNS_Framework_GroupSizeLimit = "(WIP)Group Size Limit",
+	Sandbox_PZNS_Framework_GroupSizeLimit_tooltip = "(WIP)Sets the limit of NPCs a group may have",
+
+	Sandbox_PZNS_Framework_CompanionFollowRange = "Companion Follow Range",
+	Sandbox_PZNS_Framework_CompanionFollowRange_tooltip = "Sets the distance at which NPCs will try to follow the player",	
+
+	Sandbox_PZNS_Framework_CompanionRunRange = "Companion Run Range",
+	Sandbox_PZNS_Framework_CompanionRunRange_tooltip = "Sets the distance at which NPCs will start running to catch up",
+
+	Sandbox_PZNS_Framework_CompanionIdleTicks = "(WIP)Companion Idles at Tick",
+	Sandbox_PZNS_Framework_CompanionIdleTicks_tooltip = "(WIP)Sets the Tick counter at which NPCs will begin idle behaviors",
+
+	Sandbox_PZNS_Framework_ShouldNpcFlee = "Should NPCs try fleeing",
+	Sandbox_PZNS_Framework_ShouldNpcFlee_tooltip = "If true, NPCs will flee from X amount of zombies",
+
+	Sandbox_PZNS_Framework_Zombieamountforflee = "Amount Of Zombies NPCs Should Flee From",
+	Sandbox_PZNS_Framework_Zombieamountforflee_tooltip = "If there are more zombies than the amount given zombies will flee",
+
+	Sandbox_PZNS_Framework_meleeTicks = "Melee Attack at Tick",
+	Sandbox_PZNS_Framework_meleeTicks_tooltip = "Sets the Tick counter at which NPCs will attack with melees",
+
+	Sandbox_PZNS_Framework_rangedTicks = "Ranged Attack at Tick",
+	Sandbox_PZNS_Framework_rangedTicks_tooltip = "Sets the Tick counter at which NPCs will shoot enemies",
+}

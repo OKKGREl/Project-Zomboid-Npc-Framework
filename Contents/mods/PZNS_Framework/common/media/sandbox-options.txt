@@ -1,0 +1,118 @@
+VERSION = 1,
+
+option PZNS_Framework.IsDebugModeActive
+{
+	type = boolean,
+	default = true,
+
+	page = PZNS_Framework, translation = PZNS_Framework_IsDebugModeActive,
+}
+
+option PZNS_Framework.IsInfiniteAmmoActive
+{
+	type = boolean,
+	default = true,
+
+	page = PZNS_Framework, translation = PZNS_Framework_IsInfiniteAmmoActive,
+}
+
+option PZNS_Framework.HideNpcNameTags
+{
+	type = boolean,
+	default = false,
+
+	page = PZNS_Framework, translation = PZNS_Framework_HideNpcNameTags,
+}
+
+option PZNS_Framework.IsNPCsNeedsActive
+{
+	type = boolean,
+	default = false,
+
+	page = PZNS_Framework, translation = PZNS_Framework_IsNPCsNeedsActive,
+}
+
+
+option PZNS_Framework.GroupSizeLimit
+{
+	type = integer,
+	min = 1,
+	max = 20,
+	default = 8,
+
+	page = PZNS_Framework, translation = PZNS_Framework_GroupSizeLimit,
+}
+
+
+option PZNS_Framework.CompanionFollowRange
+{
+	type = integer,
+	min = 1,
+	max = 30,
+	default = 3,
+
+	page = PZNS_Framework, translation = PZNS_Framework_CompanionFollowRange,
+}
+
+
+option PZNS_Framework.CompanionRunRange
+{
+	type = integer,
+	min = 1,
+	max = 30,
+	default = 5,
+
+	page = PZNS_Framework, translation = PZNS_Framework_CompanionRunRange,
+}
+
+
+option PZNS_Framework.CompanionIdleTicks
+{
+	type = integer,
+	min = 500,
+	max = 10000,
+	default = 500,
+
+	page = PZNS_Framework, translation = PZNS_Framework_CompanionIdleTicks,
+}
+
+option PZNS_Framework.ShouldNpcFlee
+{
+	type = boolean,
+	default = false,
+
+	page = PZNS_Framework, translation = PZNS_Framework_ShouldNpcFlee,
+}
+
+
+option PZNS_Framework.Zombieamountforflee
+{
+	type = integer,
+	min = 1,
+	max = 1000,
+	default = 3,
+
+	page = PZNS_Framework, translation = PZNS_Framework_Zombieamountforflee,
+}
+
+option PZNS_Framework.meleeTicks
+{
+	type = integer,
+	min = 10,
+	max = 100,
+	default = 40,
+
+	page = PZNS_Framework, translation = PZNS_Framework_meleeTicks,
+}
+
+
+
+option PZNS_Framework.rangedTicks
+{
+	type = integer,
+	min = 10,
+	max = 100,
+	default = 60,
+
+	page = PZNS_Framework, translation = PZNS_Framework_rangedTicks,
+}
