@@ -59,6 +59,10 @@ local function PZNS_CreateZoneTypesMenu(parentContextMenu, controlKey, groupID)
 					KarasZoneAPI.OpenSelector(getPlayer(), nil, nil, PZNS_UtilsZones.PZNS_CreateHomeZone);
 					local playerGroupID = "Player" .. "0" .. "Group";
 					PZNS_NPCZonesManager.createZone(playerGroupID, "ZoneHome");
+				elseif (zoneKey == "ZoneDropCorpses") then
+					KarasZoneAPI.OpenSelector(getPlayer(), nil, nil, PZNS_UtilsZones.PZNS_CreateCorpseZone);
+					local playerGroupID = "Player" .. "0" .. "Group";
+					PZNS_NPCZonesManager.createZone(playerGroupID, "ZoneDropCorpses");
 				end
 	
             end

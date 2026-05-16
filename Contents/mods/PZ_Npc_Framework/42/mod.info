@@ -1,0 +1,6 @@
+name=Project Zomboid Npc Framework
+poster=poster.png
+id=PZ_Npc_Framework
+description=Project Zomboid NPC Framework
+url=https://github.com/OKKGREl/Project-Zomboid-Npc-Framework/tree/main
+versionMin=42.0

@@ -191,22 +191,25 @@ function PZNS_UtilsZones.PZNS_SetGroupZoneBoundary(groupID, zoneType, boundaries
     end
 end
 
+
 ---comment
 ---@param groupID string
 ---@param zoneType string
-function PZNS_UtilsZones.PZNS_StartSelectingZone(groupID, zoneType)
-    --
-    PZNS_IsCreatingZone = true;
-    local baseBounds = PZNS_UtilsZones.PZNS_GetGroupZoneBoundary(groupID, zoneType);
-    --
-    if (baseBounds ~= nil) then
-        zoneHighlightX1 = baseBounds[1];
-        zoneHighlightX2 = baseBounds[2];
-        zoneHighlightY1 = baseBounds[3];
-        zoneHighlightY2 = baseBounds[4];
-        zoneHighlightZ = baseBounds[5];
-    end
-    Events.OnRenderTick.Add(selectZoneSquares);
+function PZNS_UtilsZones.PZNS_CreateCorpseZone(javaList, x1, y1, x2, y2, z)
+    local zoneBoundaries = {
+        math.floor(x1),
+        math.floor(x2),
+        math.floor(y1),
+        math.floor(y2),
+        math.floor(z)
+    };
+
+    local playerGroupID = "Player" .. "0" .. "Group";
+
+    PZNS_UtilsZones.PZNS_SetGroupZoneBoundary(playerGroupID, "ZoneDropCorpses", zoneBoundaries);
+
+    PZNS_IsCreatingZone = false;
+	print("created");
 end
 
 
@@ -234,24 +237,6 @@ function PZNS_UtilsZones.PZNS_CreateHomeZone(javaList, x1, y1, x2, y2, z)
 	print("created");
 end
 
----comment
----@param groupID string
----@param zoneType string
-function PZNS_UtilsZones.PZNS_EndSelectingZone(groupID, zoneType)
-    local zoneBoundaries = {
-        math.floor(zoneHighlightX1),
-        math.floor(zoneHighlightX2),
-        math.floor(zoneHighlightY1),
-        math.floor(zoneHighlightY2),
-        math.floor(getSpecificPlayer(0):getZ())
-    };
-
-    PZNS_UtilsZones.PZNS_SetGroupZoneBoundary(groupID, zoneType, zoneBoundaries);
-
-    PZNS_IsCreatingZone = false;
-
-    Events.OnRenderTick.Remove(selectZoneSquares);
-end
 
 ---comment
 ---@param groupID string
